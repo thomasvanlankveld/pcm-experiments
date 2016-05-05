@@ -1,3 +1,4 @@
-import { Sine } from './Sine';
+import Sine from './Sine';
+import InvalidBitDepthError from './InvalidBitDepthError';
 
-export { Sine };
+export { Sine, InvalidBitDepthError };

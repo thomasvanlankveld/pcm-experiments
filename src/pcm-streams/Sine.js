@@ -1,7 +1,9 @@
-const Readable = require('stream').Readable;
+import InvalidBitDepthError from './InvalidBitDepthError';
+import { Readable } from 'stream';
 
-export class Sine extends Readable {
+export default class Sine extends Readable {
   constructor({ bitDepth = 16, channels = 2, sampleRate = 44100, frequency, duration } = {}) {
+    if (bitDepth !== 16 && bitDepth !== 32) throw new InvalidBitDepthError(`bitDepth must be 16 or 32, got ${bitDepth}`);
     super();
     Object.assign(this, {
       bitDepth,
@@ -18,8 +20,7 @@ export class Sine extends Readable {
     var blockAlign = sampleSize * this.channels;
     var numSamples = n / blockAlign | 0;
     var buffer = new Buffer(numSamples * blockAlign);
-    var amplitude = 32760; // Max amplitude for 16-bit audio
-    // var amplitude = Math.pow(2, this.bitDepth) / 2; // Max amplitude for 16-bit audio
+    var maxAmplitude = (Math.pow(2, this.bitDepth) / 2) - 1; // Max amplitude
 
     // the "angle" used in the function, adjusted for the number of
     // channels and sample rate. This value is like the period of the wave.
@@ -29,7 +30,7 @@ export class Sine extends Readable {
       // fill with a simple sine wave at max amplitude
       for (var channel = 0; channel < this.channels; channel++) {
         var s = this.samplesGenerated + i;
-        var val = Math.round(amplitude * Math.sin(t * s)); // sine wave
+        var val = Math.round(maxAmplitude * Math.sin(t * s)); // sine wave
         var offset = (i * sampleSize * this.channels) + (channel * sampleSize);
         buffer[`writeInt${this.bitDepth}LE`](val, offset);
       }
