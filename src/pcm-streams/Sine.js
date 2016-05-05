@@ -4,6 +4,8 @@ import { Readable } from 'stream';
 export default class Sine extends Readable {
   constructor({ bitDepth = 16, channels = 2, sampleRate = 44100, frequency, duration } = {}) {
     if (bitDepth !== 16 && bitDepth !== 32) throw new InvalidBitDepthError(`bitDepth must be 16 or 32, got ${bitDepth}`);
+    if (!frequency) throw new ReferenceError('frequency is not defined');
+    if (!duration) throw new ReferenceError('duration is not defined');
     super();
     Object.assign(this, {
       bitDepth,
