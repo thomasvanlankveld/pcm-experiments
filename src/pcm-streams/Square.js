@@ -25,7 +25,7 @@ export default class Square extends Readable {
     var maxAmplitude = (Math.pow(2, this.bitDepth) / 2) - 1; // Max amplitude
 
     // This value is like the period of the wave.
-    var t = this.sampleRate/ this.frequency;
+    var t = this.sampleRate / this.frequency;
 
     for (var i = 0; i < numSamples; i++) {
       // fill with a simple square wave at max amplitude
